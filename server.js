@@ -197,6 +197,29 @@ async function handleDirections(origin, destination, mode = "driving") {
   };
 }
 
+// --- NEW: Composite Handler for Elevation by Address ---
+async function handleElevationByAddress(address) {
+  console.log(`Getting elevation for address: ${address}`);
+  // Step 1: Geocode the address
+  const geocodeResult = await handleGeocode(address);
+
+  // handleGeocode throws if it fails, so we can assume success if we reach here
+  const { location } = geocodeResult; // Extract { lat, lng }
+
+  console.log(`Geocoded ${address} to: ${location.lat}, ${location.lng}`);
+
+  // Step 2: Get elevation for the coordinates
+  // handleElevation expects an array of locations
+  const elevationResult = await handleElevation([{ latitude: location.lat, longitude: location.lng }]);
+
+  // Return the elevation result (it's already structured correctly by handleElevation)
+  // We might want to add the original address or formatted address for context
+  return {
+      ...elevationResult,
+      address: address, // Add original address back
+      formatted_address: geocodeResult.formatted_address // Add formatted address from geocode
+  };
+}
 
 // --- A2A Endpoints ---
 
@@ -269,6 +292,9 @@ app.post('/a2a/tasks/send', async (req, res, next) => {
         break;
       case "maps_elevation":
         resultData = await handleElevation(toolArgs.locations);
+        break;
+      case "maps_get_elevation_by_address":
+        resultData = await handleElevationByAddress(toolArgs.address);
         break;
       case "maps_directions":
         resultData = await handleDirections(toolArgs.origin, toolArgs.destination, toolArgs.mode);

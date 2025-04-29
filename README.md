@@ -235,6 +235,33 @@ Here are some examples using curl. Pipe the output to jq for pretty-printed JSON
       }' | jq .
    ```
 
+5. Get elevation of a location by address:
+   ```
+   curl -X POST http://localhost:3000/a2a/tasks/send \
+    -H "Content-Type: application/json" \
+    -d '{
+        "taskId": "task-elevation-everest",
+        "messages": [
+          {
+            "role": "user",
+            "parts": [
+              {
+                "dataPart": {
+                  "mimeType": "application/json",
+                  "jsonData": {
+                    "toolName": "maps_get_elevation_by_address",
+                    "arguments": {
+                      "address": "Everest Base Camp, Nepal"
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }' | jq .
+   ```
+
 ## License
 
 This project is licensed under the terms of the MIT License.

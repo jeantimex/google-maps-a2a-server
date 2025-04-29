@@ -195,6 +195,45 @@
           }
         },
         {
+          "name": "maps_get_elevation_by_address",
+          "description": "Get elevation for a location specified by address or name (combines geocoding and elevation lookup).",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "address": {
+                "type": "string",
+                "description": "The address or place name to get elevation for"
+              }
+            },
+            "required": ["address"]
+          },
+          "outputSchema": {
+              "type": "object",
+              "properties": {
+                  "results": {
+                      "type": "array",
+                      "items": {
+                          "type": "object",
+                          "properties": {
+                              "elevation": {"type": "number"},
+                              "location": {"type": "object", "properties": {"lat": {"type": "number"}, "lng": {"type": "number"}}},
+                              "resolution": {"type": "number"}
+                          }
+                      },
+                      "description": "Elevation results for the geocoded location"
+                  },
+                   "address": {
+                      "type": "string",
+                      "description": "The original address queried"
+                  },
+                  "formatted_address": {
+                      "type": "string",
+                      "description": "The formatted address returned by geocoding"
+                  }
+              }
+          }
+        },
+        {
           "name": "maps_directions",
           "description": "Get directions between two points.",
           "inputSchema": {
